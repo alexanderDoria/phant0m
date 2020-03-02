@@ -4,8 +4,9 @@ import requests
 
 class Backtest:
 
-    def __init__(self, symbol, bal, window, timeframe):
-        self.symbol = symbol.upper()  # ticker symbol
+    def __init__(self, alpha, beta, bal, window, timeframe):
+        self.alpha = alpha.upper()  # long ticker symbol
+        self.beta = beta.upper()  # hedge ticker symbol
         self.bal = bal  # current balance
         self.starting_bal = bal  # starting balance
         self.window = window  # rolling window i.e. MA
@@ -21,12 +22,12 @@ class Backtest:
 
     # TODO: leverage without 3x ETF
 
-    def read(self, symbol=None):
+    def read(self, alpha=None):
         print("reading...")
-        if not symbol:
-            symbol = self.symbol
+        if not alpha:
+            alpha = self.alpha
         try:
-            path = "data/" + symbol + "_" + self.timeframe + ".csv"
+            path = "data/" + alpha + "_" + self.timeframe + ".csv"
             print("path: ", path)
             self.data = pd.read_csv(path)
         except:
@@ -65,7 +66,7 @@ class Backtest:
                 (self.shares * self.price_bought)
             self.bal += profit
             print("closed at: ", str(round(data['Close'], 2)))
-            print('profit: ', str(round(profit, 2)))
+            print('profit: $', str(round(profit, 2)))
             return profit
         else:
             print("hold")
@@ -73,28 +74,25 @@ class Backtest:
 
     def backtest(self, window):
         if not self.data.shape[0]:
-            self.read(self.symbol)
-        # print("data shape: ", self.data.shape)
-        # print("data sample: ")
-        # print(self.data[['Date', 'Open', 'Close']].head())
+            self.read(self.alpha)
+
         self.set_params()
         self.data['ma_' +
                   str(window)] = self.data['Close'].rolling(window=window).mean()
         self.data['profit'] = self.data.apply(
             self.calculate_profit, axis=1)
-        print(self.data[['Date', 'Open', 'Close', 'ma_7', 'profit']])
-        print("MA profit: ", str(round(self.data['profit'].sum(), 2)))
-        bh = (self.shares * self.close) - self.starting_bal
-        print("buy-and-hold profit: ",
-              str(round(bh, 2)))
+        pct_gain = 100 * ((self.bal - self.starting_bal) / self.starting_bal)
+        pct_gain = str(round(pct_gain, 2))
+        print("\nstarting balance: $", self.starting_bal)
+        print("ending balance: $", round(self.bal, 2))
+        print("\nMA profit: $", str(round(self.data['profit'].sum(), 2)))
+        bh = round((self.shares * self.close) - self.starting_bal, 2)
+        print("buy-and-hold profit: $", bh)
+        print("\nMA % gain: ", pct_gain)
 
     def __str__(self):
         print("starting balance: ", self.starting_bal)
         print("ending balance: ", self.bal)
-
-        pct_gain = (self.bal - self.starting_bal) / self.starting_bal
-        pct_gain = str(round(pct_gain, 2))
-        print("% gain: ", pct_gain)
 
     # def backtest_many(self, small_window, large_window):
     #    return 0

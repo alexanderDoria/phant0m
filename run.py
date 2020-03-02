@@ -1,3 +1,3 @@
 from backtest import Backtest
 
-b = Backtest('TECL', 1000, 7, 'weekly')
+b = Backtest('TQQQ', 'XLU', 1000, 7, 'daily')
