@@ -8,7 +8,7 @@ There are currently many successful rules-based systems which are considered "tr
 
 However, determining the trend can be difficult and knowing when to buy and sell can often lead to false positives. Is there a way to gain an edge on trend following systems?
 
-### data exploriation, unsupervised learning
+### data exploration, unsupervised learning
 
 identifying candle sticks using k-means:
 
