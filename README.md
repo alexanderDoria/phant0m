@@ -37,7 +37,9 @@ We're using a random forest for about 10 years worth of data. Max depth of 2-5 o
 
 With an accuracy of 76%, it may seem quite powerful. But, since the classes were approximately a 70/30 split, it's only slightly better than guessing the majority class. 
 
-My favorite takeaway: The majority of guesses for -1 (80%) are below the 200 day MA. Precision for -1 guesses is about 40% which is better than I'd expect. Is this better than rules-based system? Probably not.
+My favorite takeaway: The majority of guesses for -1 (80%) are below the 200 day MA. Precision for -1 guesses is about 40% which is better than I'd expect. 
+
+But... is this better than rules-based system? Probably not.
 
 #### Next steps
 
